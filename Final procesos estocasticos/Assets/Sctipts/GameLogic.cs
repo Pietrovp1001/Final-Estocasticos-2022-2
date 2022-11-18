@@ -12,13 +12,17 @@ using Random = UnityEngine.Random;
 
 public class GameLogic : MonoBehaviour
 {
-    public List<int> simonList, userList;
+    public IList<int> simonList, userList;
     public Animator[] animators;
-    public TextMeshProUGUI roundText, loserText, retryButton;
+    public TextMeshProUGUI roundText, loserText, retryButton, simontext, usertext;
     public Image retryImage, sadFace;
+    public GameObject win;
     public Button retry;
     public int round = 1;
     public List<GameObject> buttons = new List<GameObject>();
+    private Array arraysimon, arrayuser;
+    private string stringsimon, stringuser;
+    
    
     
     
@@ -60,8 +64,7 @@ public class GameLogic : MonoBehaviour
             action(3);
         }
 
-        
-        
+
         if (userList.Count > round)
         {
             Debug.Log("Perdiste!");
@@ -96,9 +99,14 @@ public class GameLogic : MonoBehaviour
                 if (count == 0)
                 {
                     Debug.Log("Proximo!");
-                    roundText.text = round.ToString();
-                    simonIsPlaying = true;
-                    StartCoroutine("newRound");
+                    win.SetActive(true);
+                    stringsimon = simonList.ToString();
+                    stringuser = userList.ToString();
+                    simontext.text = stringsimon;
+                    usertext.text = stringuser;
+                    Debug.Log(stringsimon);
+                    Debug.Log(stringuser);
+
                 }
                 else if (count > 0 )
                 {
@@ -115,7 +123,14 @@ public class GameLogic : MonoBehaviour
             }
         }
     }
-    
+
+    public void nextround()
+    {
+        win.SetActive(false);
+        roundText.text = round.ToString();
+        simonIsPlaying = true;
+        StartCoroutine("newRound");
+    }
     void action(int id)
     {
         animators[id].SetBool("KeyPress", true);
