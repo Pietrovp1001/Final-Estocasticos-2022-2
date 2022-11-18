@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 
 public class GameLogic : MonoBehaviour
 {
-    public IList<int> simonList, userList;
+    public List<int> movimientosEsperados, movimientosDelUsuario;
     public Animator[] animators;
     public TextMeshProUGUI roundText, loserText, retryButton, simontext, usertext;
     public Image retryImage, sadFace;
@@ -20,18 +20,12 @@ public class GameLogic : MonoBehaviour
     public Button retry;
     public int round = 1;
     public List<GameObject> buttons = new List<GameObject>();
-    private Array arraysimon, arrayuser;
-    private string stringsimon, stringuser;
-    
-   
-    
+    public List<GameObject> indicadores = new List<GameObject>();
+    private List<string> stringsimon, stringuser;
     
     private int i, randomNum, interval = 1, count = 0, y;
     private bool simonIsPlaying = true, checkValues = false;
     
-
-
-
     void Start()
     {
         StartCoroutine("newRound");
@@ -42,30 +36,30 @@ public class GameLogic : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            userList.Add(0);
+            movimientosDelUsuario.Add(0);
             action(0);
         }
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            userList.Add(1);
+            movimientosDelUsuario.Add(1);
             action(1);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            userList.Add(2);
+            movimientosDelUsuario.Add(2);
             action(2);
         }
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            userList.Add(3);
+            movimientosDelUsuario.Add(3);
             action(3);
         }
 
 
-        if (userList.Count > round)
+        if (movimientosDelUsuario.Count > round)
         {
             Debug.Log("Perdiste!");
             retryImage.enabled = true;
@@ -75,37 +69,38 @@ public class GameLogic : MonoBehaviour
             Destroy(buttons[1]);
             Destroy(buttons[2]);
             Destroy(buttons[3]);
+            
+            Destroy(indicadores[0]);
+            Destroy(indicadores[1]);
+            Destroy(indicadores[2]);
+            Destroy(indicadores[3]);
+            
             sadFace.enabled = true;
         }
         
-        if (userList.Count == simonList.Count)
+        if (movimientosDelUsuario.Count == movimientosEsperados.Count)
         {
             StartCoroutine(nameof(CheckLists));
 
             if (checkValues)
             {
-                for (int y = 0; y < simonList.Count; y++)
+                for (int y = 0; y < movimientosEsperados.Count; y++)
                 {
-                    if(simonList[y] != userList[y])
+                    if(movimientosEsperados[y] != movimientosDelUsuario[y])
                     {
                         count++;
                     }
-                    else if (userList[y] == simonList[y])
+                    else if (movimientosDelUsuario[y] == movimientosEsperados[y])
                     {
                         Debug.Log("Correct");
                     }
                 }
+                
 
                 if (count == 0)
                 {
                     Debug.Log("Proximo!");
                     win.SetActive(true);
-                    stringsimon = simonList.ToString();
-                    stringuser = userList.ToString();
-                    simontext.text = stringsimon;
-                    usertext.text = stringuser;
-                    Debug.Log(stringsimon);
-                    Debug.Log(stringuser);
 
                 }
                 else if (count > 0 )
@@ -141,13 +136,13 @@ public class GameLogic : MonoBehaviour
     {
         if (simonIsPlaying)
         {
-            simonList = new List<int>();
-            userList = new List<int>();
+            movimientosEsperados = new List<int>();
+            movimientosDelUsuario = new List<int>();
 
             for (int i = 0; i < round; i++)
             {
                 randomNum = Random.Range(0, 4);
-                simonList.Add(randomNum);
+                movimientosEsperados.Add(randomNum);
                 action(randomNum);
 
                 yield return new WaitForSeconds(interval);
