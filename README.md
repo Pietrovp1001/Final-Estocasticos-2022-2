@@ -1,3 +1,3 @@
-# Final-Estocasticos-2022-2
+# Simon Says game made with unity using C#
 
-Simon Says Game made with Unity in C#
+Made by Pietro Villano and Santiago Londoño
